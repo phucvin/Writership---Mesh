@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Writership;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class CubeSphere : MonoBehaviour
@@ -11,6 +12,10 @@ public class CubeSphere : MonoBehaviour
     private Vector3[] vertices;
     private Vector3[] normals;
     private Color32[] cubeUV;
+
+    public Ar<Vector3> Vertices { get; private set; }
+    public Ar<Vector3> Normals { get; private set; }
+    public Ar<Color32> CubeUV { get; private set; }
 
     private void Awake()
     {
@@ -73,9 +78,13 @@ public class CubeSphere : MonoBehaviour
             }
         }
 
-        mesh.vertices = vertices;
-        mesh.normals = normals;
-        mesh.colors32 = cubeUV;
+        Vertices = new Ar<Vector3>(G.Engine, vertices);
+        Normals = new Ar<Vector3>(G.Engine, normals);
+        CubeUV = new Ar<Color32>(G.Engine, cubeUV);
+
+        mesh.vertices = Vertices.Read();
+        mesh.normals = Normals.Read();
+        mesh.colors32 = CubeUV.Read();
     }
 
     private void SetVertex(int i, int x, int y, int z)
