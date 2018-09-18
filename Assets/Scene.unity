@@ -303,7 +303,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1001950699}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cb95aac3264d3f49ad67600e5f024fc, type: 3}
   m_Name: 
@@ -349,13 +349,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1549038361}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0036477e43f364e19be1af76eee609b9, type: 3}
+  m_Script: {fileID: 11500000, guid: d629400df31894f76972f5862b58393d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSize: 5
-  ySize: 5
-  zSize: 5
-  roundness: 2
+  gridSize: 20
+  radius: 1
 --- !u!23 &1549038363
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -633,5 +631,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be607a3050f124b7aa040210bfa97c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: 10
+  force: 30
   forceOffset: 0.1
