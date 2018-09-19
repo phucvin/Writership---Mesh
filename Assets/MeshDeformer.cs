@@ -49,6 +49,7 @@ public class MeshDeformer : MonoBehaviour
 
         G.Engine.Computer(cd, Dep.On(Deform, G.Tick), () =>
         {
+            if (Deform.Count <= 0 && isStill(this.vertexVelocities.Read())) return;
             var vertexVelocities = this.vertexVelocities.AsWrite();
             var displacedVertices = this.displacedVertices.Read();
             float dt = G.Tick.Reduced;
@@ -66,6 +67,7 @@ public class MeshDeformer : MonoBehaviour
         });
         G.Engine.Computer(cd, Dep.On(G.Tick), () =>
         {
+            if (isStill(this.vertexVelocities.Read())) return;
             var vertexVelocities = this.vertexVelocities.Read();
             var displacedVertices = this.displacedVertices.AsWrite();
             float dt = G.Tick.Reduced;
@@ -116,5 +118,15 @@ public class MeshDeformer : MonoBehaviour
         float attenuatedForce = force / (1f + pointToVertex.sqrMagnitude);
         float velocity = attenuatedForce * dt;
         vertexVelocities[i] += pointToVertex.normalized * velocity;
+    }
+
+    bool isStill(Vector3[] vertexVelocities)
+    {
+        float m = 0;
+        for (int i = 0, n = vertexVelocities.Length; i < n; ++i)
+        {
+            m += vertexVelocities[i].sqrMagnitude;
+        }
+        return m < 0.001f;
     }
 }
