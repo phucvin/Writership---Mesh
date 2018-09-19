@@ -50,7 +50,7 @@ public class MeshDeformer : MonoBehaviour
         G.Engine.Computer(cd, Dep.On(Deform, G.Tick), () =>
         {
             var vertexVelocities = this.vertexVelocities.AsWrite();
-            var displacedVertices = this.displacedVertices.AsWrite();
+            var displacedVertices = this.displacedVertices.Read();
             float dt = G.Tick.Reduced;
 
             for (int i = 0, n = Deform.Count; i < n; ++i)
@@ -59,7 +59,18 @@ public class MeshDeformer : MonoBehaviour
                 AddDeformingForce(d.Point, d.Force, displacedVertices, vertexVelocities, dt);
             }
 
-            for (int i = 0, n = displacedVertices.Length; i < n ; i++)
+            for (int i = 0, n = displacedVertices.Length; i < n; i++)
+            {
+                UpdateVelocity(i, displacedVertices, vertexVelocities, dt);
+            }
+        });
+        G.Engine.Computer(cd, Dep.On(G.Tick), () =>
+        {
+            var vertexVelocities = this.vertexVelocities.Read();
+            var displacedVertices = this.displacedVertices.AsWrite();
+            float dt = G.Tick.Reduced;
+
+            for (int i = 0, n = displacedVertices.Length; i < n; i++)
             {
                 UpdateVertex(i, displacedVertices, vertexVelocities, dt);
             }
@@ -77,10 +88,17 @@ public class MeshDeformer : MonoBehaviour
         Vector3 velocity = vertexVelocities[i];
         Vector3 displacement = displacedVertices[i] - originalVertices[i];
         displacement *= uniformScale;
+        displacedVertices[i] += velocity * (dt / uniformScale);
+    }
+
+    void UpdateVelocity(int i, Vector3[] displacedVertices, Vector3[] vertexVelocities, float dt)
+    {
+        Vector3 velocity = vertexVelocities[i];
+        Vector3 displacement = displacedVertices[i] - originalVertices[i];
+        displacement *= uniformScale;
         velocity -= displacement * springForce * dt;
         velocity *= 1f - damping * dt;
         vertexVelocities[i] = velocity;
-        displacedVertices[i] += velocity * (dt / uniformScale);
     }
 
     void AddDeformingForce(Vector3 point, float force, Vector3[] displacedVertices, Vector3[] vertexVelocities, float dt)
