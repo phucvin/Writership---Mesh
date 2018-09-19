@@ -3,7 +3,7 @@ using Writership;
 
 public class G : MonoBehaviour
 {
-    public static readonly IEngine Engine = new MultithreadEngine();
+    public static readonly IEngine Engine = new MultithreadEngine(workerMaxThreads: 3);
     public static readonly Op<float> Tick = Engine.Op<float>(reducer: (a, b) => a + b);
 
     private void LateUpdate()
